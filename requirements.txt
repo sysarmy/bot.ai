@@ -86,7 +86,7 @@ typing_extensions==4.13.2
 tzdata==2025.1
 uritemplate==4.1.1
 url-normalize==2.2.1
-urllib3==2.2.1
+urllib3==2.2.2
 watchdog==6.0.0
 Webhook-Listener==1.2.0
 websockets==13.1
