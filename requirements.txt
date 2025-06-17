@@ -71,7 +71,7 @@ pytz==2025.1
 PyYAML==6.0.2
 RapidFuzz==3.13.0
 ratelimit==2.2.1
-requests==2.31.0
+requests==2.32.4
 requests-cache==1.2.1
 requests-oauthlib==2.0.0
 rsa==4.9
