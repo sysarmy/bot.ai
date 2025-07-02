@@ -44,7 +44,7 @@ jaraco.collections==5.1.0
 jaraco.context==6.0.1
 jaraco.functools==4.1.0
 jaraco.text==4.0.0
-Jinja2==3.1.5
+Jinja2==3.1.6
 kiwisolver==1.4.7
 MarkupSafe==3.0.2
 matplotlib==3.9.4
