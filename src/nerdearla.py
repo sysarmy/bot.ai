@@ -5,7 +5,6 @@ import os
 from dotenv import load_dotenv
 from datetime import datetime, timezone
 from ratelimit import limits
-from ics import Calendar
 import requests
 
 #########################################################################################
@@ -27,35 +26,81 @@ async def nerdearlacharlasfunc(interaction, texto):
     youtube = build('youtube', 'v3', developerKey=YOUTUBE_API_KEY)
     channel_id = 'UC1WxOSF0QFb7C0I_QGiDlrA'  # Channel ID de Nerdearla
 
-    # Traemos los eventos del Google Calendar publico de Sysarmy
-    response = requests.get(os.getenv('calendar_nerdearla'))
-    calendar = Calendar(response.text)
+    ###################### Bloque de busqueda en Endpoint de backstage ######################
 
-    ###################### Bloque de busqueda en ICS Calendar ######################
+    # Conecta al endpoint de nerdearla y trae JSON
+    API_URL = "https://backstage.nerdearla.com/api/sessions/"
+    response = requests.get(API_URL, timeout=10)
+    response.raise_for_status()
+
+    data = response.json()
+    sessions = data.get("sessions", [])
+    lista_charlas = []
 
     # Buscamos las charlas por titulo
-    lista_charlas = []
-    for event in calendar.events:
-        if texto.lower() in event.name.lower():
-            event_info = {
-                "title": event.name,
-                "start": event.begin.strftime('%Y-%m-%d %H:%M'),
-                "description": event.description if event.description else "Link no dispobible"
+    for session in sessions:
+        title = session.get("title", "")
+        if texto.lower() not in title.lower():
+            continue
 
-            }
-            lista_charlas.append(event_info)
+        # Chequeamos solo por charlas en el futuro
+        start_raw = session.get("start")
 
-    lista_charlas = lista_charlas[:5]  # Limitamos a un maximo de 5
+        if not start_raw:
+            continue
+        try:
+            session_date = datetime.strptime(start_raw, "%Y-%m-%d %H:%M")
+        except ValueError:
+            continue
+        if session_date < datetime.now():
+            continue
 
-    # Si encontramos charlas, las mandamos como embed
+        fecha_str = start_raw
+
+        # Trae data de speakers
+        speaker_entries = session.get("speakers", [])
+        speaker_names = []
+
+        for sp in speaker_entries:
+            if isinstance(sp, dict):
+                first = sp.get("first_name", "")
+                last = sp.get("last_name", "")
+                full_name = f"{first} {last}".strip()
+                if full_name:
+                    speaker_names.append(full_name)
+
+        speakers_str = ", ".join(speaker_names) or "Speaker no disponible"
+
+
+        lista_charlas.append({
+            "title": title,
+            "start": fecha_str,
+            "speakers": speakers_str
+        })
+
+    # Limitamos a 5 resultados
+    lista_charlas = lista_charlas[:5]
+
+    # Crea el embed para mandar
     if lista_charlas:
         embedCharlas = discord.Embed(title="Próximas charlas en Nerdearla (5 max)", color=discord.Color.blue())
+
         for event in lista_charlas:
-            embedCharlas.add_field(name=event["title"], value=f"Fecha y Hora: {event['start']}\nLink Swapcard: {event['description']}", inline=False)
-        
+            embedCharlas.add_field(
+                name=event["title"],
+                value=(
+                    f" **Fecha y Hora:** {event['start']}\n"
+                    f" **Speakers:** {event['speakers']}"
+                ),
+                inline=False
+            )
+
         await interaction.followup.send(embed=embedCharlas, ephemeral=True)
     else:
-        await interaction.followup.send(f"No encontré charlas próximas en Nerdearla para '{texto}'", ephemeral=True)
+        await interaction.followup.send(
+            f"No encontré charlas próximas en Nerdearla para '{texto}'",
+            ephemeral=True
+        )
 
     ###################### Bloque de busqueda en YouTube ######################
 
@@ -96,4 +141,4 @@ async def nerdearlacharlasfunc(interaction, texto):
 
     # Log
     print(FechaActual)
-    print(f"Se ha ejecutado el comando slash para '{texto}'")
+    print(f"Se ha ejecutado el comando /nerdearla para '{texto}'")
