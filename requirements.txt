@@ -41,7 +41,7 @@ importlib_metadata==8.7.0
 importlib_resources==6.5.2
 itsdangerous==2.2.0
 jaraco.collections==5.1.0
-jaraco.context==6.0.1
+jaraco.context==6.1.0
 jaraco.functools==4.1.0
 jaraco.text==4.0.0
 Jinja2==3.1.6
@@ -60,8 +60,8 @@ pillow==11.3.0
 platformdirs==4.3.8
 portend==3.2.0
 proto-plus==1.26.0
-protobuf==5.29.5
-pyasn1==0.6.1
+protobuf==6.33.5
+pyasn1==0.6.2
 pyasn1_modules==0.4.1
 pyngrok==7.2.3
 pyparsing==3.2.1
@@ -90,7 +90,7 @@ urllib3==2.6.3
 watchdog==6.0.0
 Webhook-Listener==1.2.0
 websockets==13.1
-Werkzeug==3.1.4
+Werkzeug==3.1.5
 yarl>=1.17.0
 zc.lockfile==3.0.post1
 zipp==3.21.0
