@@ -581,13 +581,24 @@ async def on_message(message):
 ################### FUNCION DE ON_MESSAGE PARA YELLING ###################
 
 #Lee el canal de Yelling
-    if message.channel.id == 758773471315492925: 
-        # Regex to match URLs and emojis
+    if message.channel.id == 758773471315492925:
+        # Checkea usuarios que vienen de IRC
+        irc_relay_pattern = re.compile(r'^<[^>]+>\s*(.*)$')
+        irc_match = irc_relay_pattern.match(message.content)
+
+        # Si no es de IRC, chequea el mensaje a partir de <usuario>
+        if irc_match:
+            text_to_check = irc_match.group(1)
+        else:
+            text_to_check = message.content
+
+
+        # Regex para URLs y emojis
         url_and_emoji_pattern = re.compile(r'http[s]?://\S+|:[^:]+:')
-        # Regex to match lowercase words
+        # Regex para palabras en lowercase
         lowercase_pattern = re.compile(r'\b[a-z]+\b')
-        # Replace URLs and emojis with a placeholder to ignore them in lowercase detection
-        text_without_urls_and_emojis = url_and_emoji_pattern.sub('__IGNORED__', message.content)
+        # Ignora URLs y emojis
+        text_without_urls_and_emojis = url_and_emoji_pattern.sub('__IGNORED__', text_to_check)
         # Check for any lowercase words
         has_lowercase = lowercase_pattern.search(text_without_urls_and_emojis) is not None
 
@@ -601,8 +612,7 @@ async def on_message(message):
                 lines = file.readlines()
             await message.reply(random.choice(lines).strip())
 
-# Fin de todo, se va el mensaje a ser procesado por los comandos.        
-    # print(message,message.content)
+# Fin de todo, se va el mensaje a ser procesado por los comandos.         
     await bot.process_commands(message) # <-- No tocar esto jamas o rompe los comandos on_message. Siempre dejar al final de la funcion on_message
 
 #########################################################################################
