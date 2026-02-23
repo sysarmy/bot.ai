@@ -6,7 +6,7 @@ from bs4 import BeautifulSoup
 from datetime import datetime
 
 
-async def cauchofun(interaction: discord.Interaction, monto: float = None):
+async def cauchofun(interaction: discord.Interaction):
     await interaction.response.defer()
 
     url = "https://iol.invertironline.com/mercado/cotizaciones/argentina/cauciones"
@@ -61,7 +61,7 @@ async def cauchofun(interaction: discord.Interaction, monto: float = None):
             await interaction.followup.send("📴 No se encontraron cauciones en PESOS.")
             return
 
-        cauciones = sorted(cauciones, key=lambda x: x["dias"])[:10]
+        cauciones = sorted(cauciones, key=lambda x: x["dias"])[:6]
 
         embed = Embed(
             title="📊 Cauciones en PESOS",
@@ -70,28 +70,12 @@ async def cauchofun(interaction: discord.Interaction, monto: float = None):
         )
         embed.set_footer(text=f"IOL • {datetime.now().strftime('%d/%m/%Y %H:%M:%S')}")
 
-        if monto is None:
-            for c in cauciones:
-                embed.add_field(
-                    name=f"{c['dias']} días",
-                    value=f"TNA: {c['tasa']} %",
-                    inline=True
-                )
-        else:
-            for c in cauciones:
-                dias = c["dias"]
-                tasa = c["tasa"]
-                interes = monto * (tasa / 100) * (dias / 365)
-                monto_final = monto + interes
-                embed.add_field(
-                    name=f"{dias} días • {tasa}%",
-                    value=(
-                        f"Invertido: ${monto:,.0f}\n"
-                        f"Interés: ${interes:,.2f}\n"
-                        f"Final: ${monto_final:,.2f}"
-                    ),
-                    inline=False
-                )
+        for c in cauciones:
+            embed.add_field(
+                name=f"{c['dias']} días",
+                value=f"TNA: {c['tasa']} %",
+                inline=True
+            )
 
         await interaction.followup.send(embed=embed)
         print(f"{datetime.now()} - /caucho ejecutado por {interaction.user}")
