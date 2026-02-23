@@ -6,7 +6,7 @@ from bs4 import BeautifulSoup
 from datetime import datetime
 
 
-async def caucho(interaction: discord.Interaction, monto: float = None):
+async def cauchofun(interaction: discord.Interaction, monto: float = None):
     await interaction.response.defer()
 
     url = "https://iol.invertironline.com/mercado/cotizaciones/argentina/cauciones"
