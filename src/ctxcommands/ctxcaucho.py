@@ -38,7 +38,7 @@ def fetch_cauciones_iol():
     return sorted(cauciones, key=lambda x: x["dias"])[:10]
 
 
-async def caucho(ctx, monto=None):
+async def dolarfunctx(ctx, monto=None):
     FechaActual = datetime.now()
     print(f"{FechaActual} - Se ejecutó el comando caucho")
 
