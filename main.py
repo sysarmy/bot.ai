@@ -19,6 +19,7 @@ from src.caucho import cauchofun
 from src.dolar import dolarfun
 from src.euro import eurofun
 from src.pesos import pesosfunc
+from src.tasa import tasafun
 from src.feriadoAR import feriadoARfun
 from src.feriadoCL import feriadoCLfun
 from src.feriadoES import feriadoESfun
@@ -312,7 +313,7 @@ async def on_command_error(ctx, error):
     FechaActual = datetime.now()
 
     mensajeayuda_general = """Informacion general sobre los comandos del bot de Sysarmy       
-                        !dolar !caucho !cripto !euro !pesos !fulbo !clima !subte !underground !feriadoar !feriadocl !feriadoes !feriadomx !feriadouy !q !qsearch !qadd !rank !kgivers !kgiven !karma !nerdearla !jobs !f1
+                        !dolar !caucho !cripto !euro !pesos !tasa !fulbo !clima !subte !underground !feriadoar !feriadocl !feriadoes !feriadomx !feriadouy !q !qsearch !qadd !rank !kgivers !kgiven !karma !nerdearla !jobs !f1
                         Mas detalles en el canal #help-bot-commands de Discord, dentro de la seccion de Welcome! - o ejecutando /help desde Discord"""
 
 # Custom error handling - si !help se manda vacio sin especificar comando, manda un mensaje de ayuda general
@@ -650,8 +651,8 @@ async def fulbo(ctx, liga):
 
 # COMANDO CAUCHO
 @bot.command()
-async def caucho(ctx, inputpesos):
-    await cauchofunctx(ctx, inputpesos)
+async def caucho(ctx, monto):
+    await cauchofunctx(ctx, monto)
 
 # COMANDO DOLAR
 @bot.command()
@@ -811,7 +812,16 @@ async def pesosausd(interaction: Interaction, monto:int):
         await interaction.response.send_message(embed= await pesosfunc(interaction, monto))
     except:
         print(f"Limite de API calls excedido. Ultimo call hecho por {interaction.user}")
-        await interaction.response.send_message("Comando /euro: Limite de API calls excedido. Sori el CTO no nos dio budget.")
+        await interaction.response.send_message("Comando /pesos: Limite de API calls excedido. Sori el CTO no nos dio budget.")
+
+# COMANDO TASA
+@bot.tree.command(name="tasa", description="Calcula rendimiento en pesos de varias tasas de caución")
+async def rendimientocaucho(interaction: Interaction, monto:int):
+    try:
+        await interaction.response.send_message(embed= await tasafunc(interaction, monto))
+    except:
+        print(f"Limite de API calls excedido. Ultimo call hecho por {interaction.user}")
+        await interaction.response.send_message("Comando /tasa: Limite de API calls excedido. Sori el CTO no nos dio budget.")
 
 # COMANDO CLIMA
 @bot.tree.command(name="clima", description="Información del clima")
