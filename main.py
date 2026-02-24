@@ -794,7 +794,7 @@ async def tasacaucho(interaction: Interaction):
         await cauchofun(interaction)
     except:
         print(f"Limite de API calls excedido. Ultimo call hecho por {interaction.user}")
-        await interaction.response.send_message("Comando /caucho: Limite de API calls excedido. Sori el CTO no nos dio budget.")
+        await interaction.response.send_message("Comando /tasacaucho: Limite de API calls excedido. Sori el CTO no nos dio budget.")
 
 # COMANDO EURO
 @bot.tree.command(name="precioeuro", description="Cotizacion del Euro")
