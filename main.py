@@ -818,10 +818,12 @@ async def pesosausd(interaction: Interaction, monto:int):
 @bot.tree.command(name="tasa", description="Calcula rendimiento en pesos de varias tasas de caución")
 async def rendimientocaucho(interaction: Interaction, monto:int):
     try:
-        await interaction.response.send_message(embed= await tasafunc(interaction, monto))
-    except:
+        # tasafun se encarga de hacer el defer y enviar la respuesta por followup
+        await tasafun(interaction, monto)
+    except Exception:
         print(f"Limite de API calls excedido. Ultimo call hecho por {interaction.user}")
-        await interaction.response.send_message("Comando /tasa: Limite de API calls excedido. Sori el CTO no nos dio budget.")
+        # Si ya se hizo un defer dentro de tasafun, respondemos con un followup
+        await interaction.followup.send("Comando /tasa: Limite de API calls excedido. Sori el CTO no nos dio budget.")
 
 # COMANDO CLIMA
 @bot.tree.command(name="clima", description="Información del clima")
