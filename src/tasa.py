@@ -6,7 +6,7 @@ from bs4 import BeautifulSoup
 from datetime import datetime
 
 
-async def tasafun(interaction: discord.Interaction, monto):
+async def tasafun(interaction: discord.Interaction):
     await interaction.response.defer()
 
     url = "https://iol.invertironline.com/mercado/cotizaciones/argentina/cauciones"
@@ -32,6 +32,7 @@ async def tasafun(interaction: discord.Interaction, monto):
             return
 
         cauciones = []
+
         for fila in tabla.find("tbody").find_all("tr"):
             columnas = fila.find_all("td")
             if len(columnas) < 6:
@@ -44,16 +45,16 @@ async def tasafun(interaction: discord.Interaction, monto):
             plazo_tag = columnas[0].find("strong")
             if not plazo_tag:
                 continue
+
             plazo = int(plazo_tag.text.strip())
 
-            # columnas[5] = "Tasa Tomadora" (el segundo td.tac)
             tasa_raw = columnas[5].get("data-order", "").replace(",", ".")
             if not tasa_raw:
                 continue
 
             tasa = float(tasa_raw)
             if tasa == 0:
-                continue  # filas sin tasa real
+                continue
 
             cauciones.append({"dias": plazo, "tasa": tasa})
 
@@ -64,25 +65,18 @@ async def tasafun(interaction: discord.Interaction, monto):
         cauciones = sorted(cauciones, key=lambda x: x["dias"])[:5]
 
         embed = Embed(
-            title="📊 Rendimiento de cauciones en PESOS",
+            title="📊 Tasas de cauciones en PESOS",
             description=f"Solicitado por {interaction.user}",
             color=discord.Color.green()
         )
+
         embed.set_footer(text=f"IOL • {datetime.now().strftime('%d/%m/%Y %H:%M:%S')}")
 
         for c in cauciones:
-            dias = c["dias"]
-            tasa = c["tasa"]
-            interes = monto * (tasa / 100) * (dias / 365)
-            monto_final = monto + interes
             embed.add_field(
-                name=f"{dias} días • {tasa}%",
-                value=(
-                    f"Invertido: ${monto:,.0f}\n"
-                    f"Interés: ${interes:,.2f}\n"
-                    f"Final: ${monto_final:,.2f}"
-                ),
-                inline=False
+                name=f"{c['dias']} días",
+                value=f"TNA: {c['tasa']} %",
+                inline=True
             )
 
         await interaction.followup.send(embed=embed)
