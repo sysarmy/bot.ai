@@ -810,7 +810,7 @@ async def pesosausd(interaction: Interaction, monto:int):
         await interaction.response.send_message(embed= await pesosfunc(interaction, monto))
     except:
         print(f"Limite de API calls excedido. Ultimo call hecho por {interaction.user}")
-        await interaction.response.send_message("Comando /euro: Limite de API calls excedido. Sori el CTO no nos dio budget.")
+        await interaction.response.send_message("Comando /pesos: Limite de API calls excedido. Sori el CTO no nos dio budget.")
 
 # COMANDO CLIMA
 @bot.tree.command(name="clima", description="Información del clima")

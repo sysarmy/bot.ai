@@ -32,7 +32,7 @@ async def cauchofunctx(ctx):
 
         # Log
         print(FechaActual)
-        print(f"Se ha ejecutado el comando caucho por {ctx.author}")
+        print(f"Se ha ejecutado el comando !caucho por {ctx.author}")
 
         cauciones = []
         for fila in tabla.find("tbody").find_all("tr"):

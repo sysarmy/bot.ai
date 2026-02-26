@@ -34,7 +34,7 @@ async def cauchofun(interaction):
 
         # Log
         print(FechaActual)
-        print(f"Se ha ejecutado el comando caucho por {interaction.user}")
+        print(f"Se ha ejecutado el comando /caucho por {interaction.user}")
 
         cauciones = []
         for fila in tabla.find("tbody").find_all("tr"):

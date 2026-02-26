@@ -1,7 +1,7 @@
 
 BOFH - Discord community bot for Sysarmy
 
-Version 1.5 - Apr 2025
+Version 1.6 - Feb 2026
 
 by @Qwuor01 and @aragunde
 
