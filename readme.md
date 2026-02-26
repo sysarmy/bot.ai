@@ -46,7 +46,7 @@ Comandos incluidos:
 
  - De feriados    --> !feriadomx !feriadoar !feriadouy !feriadocl !feriadoes
  - Lifestyle      --> !underground !subte !clima !fulbo !flip !shrug !f1
- - Economia       --> !cripto !dolar !euro !pesos
+ - Economia       --> !caucho !cripto !dolar !euro !pesos
  - Karma          --> !rank !karma !kgiven !kgivers
  - Quote          --> !q !qsearch !qadd
  - Comunidad      --> !birras !nerdearla !help
