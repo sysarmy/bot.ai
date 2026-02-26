@@ -13,6 +13,7 @@ import re
 from src.londonUnderground import Lines
 from src.subteBA import SubteBA
 from src.fulbo import futbolimport
+from src.caucho import cauchofun
 from src.Clima import climafun
 from src.cripto import criptofun
 from src.dolar import dolarfun
@@ -40,6 +41,7 @@ from src.discordjobs.postjob_gform import gformjobpost
 from src.tasks import scheduled_job_posting, scheduled_bulk_job_posting
 
 # IMPORT DE COMANDOS VERSION SIMPLE (FUNCIONAN POR TEXTO USANDO FUNCION CTX.SEND) 
+from src.ctxcommands.ctxcaucho import cauchofunctx
 from src.ctxcommands.ctxclima import climafunctx
 from src.ctxcommands.ctxcripto import criptofunctx
 from src.ctxcommands.ctxdolar import dolarfunctx
@@ -310,7 +312,7 @@ async def on_command_error(ctx, error):
     FechaActual = datetime.now()
 
     mensajeayuda_general = """Informacion general sobre los comandos del bot de Sysarmy       
-                        !dolar !cripto !euro !pesos !fulbo !clima !subte !underground !feriadoar !feriadocl !feriadoes !feriadomx !feriadouy !q !qsearch !qadd !rank !kgivers !kgiven !karma !nerdearla !jobs !f1
+                        !caucho !dolar !cripto !euro !pesos !fulbo !clima !subte !underground !feriadoar !feriadocl !feriadoes !feriadomx !feriadouy !q !qsearch !qadd !rank !kgivers !kgiven !karma !nerdearla !jobs !f1
                         Mas detalles en el canal #help-bot-commands de Discord, dentro de la seccion de Welcome! - o ejecutando /help desde Discord"""
 
 # Custom error handling - si !help se manda vacio sin especificar comando, manda un mensaje de ayuda general
@@ -321,7 +323,13 @@ async def on_command_error(ctx, error):
             # Log
             print(FechaActual)
             print ("Se ha ejecutado el comando !help")
-        
+
+        elif ctx.command.name == "caucho":
+            await cauchofunctx(ctx)
+            # Log
+            print(FechaActual)
+            print ("Se ha ejecutado el comando !caucho")
+
         elif ctx.command.name == "dolar":
             await dolarfunctx(ctx, None)
             # Log
@@ -640,6 +648,11 @@ async def cripto(ctx):
 async def fulbo(ctx, liga):
     await fulbofunctx(ctx, liga)   
 
+# COMANDO CAUCHO
+@bot.command()
+async def caucho(ctx):
+    await cauchofunctx(ctx)
+
 # COMANDO DOLAR
 @bot.command()
 async def dolar(ctx, inputpesos):
@@ -763,6 +776,14 @@ async def f1(ctx, texto):
 ################### LLAMADAS DE COMANDOS SLASH NATIVOS DISCORD (TREE) ###################
 
 # Comandos individuales estan en .src
+# COMANDO CAUCHO
+@bot.tree.command(name="tasacaucho", description="Tasa de caucion")
+async def tasacaucho(interaction: Interaction):
+    try:
+        await interaction.response.send_message(embed= await cauchofun(interaction))
+    except:
+        print(f"Limite de API calls excedido. Ultimo call hecho por {interaction.user}")
+        await interaction.response.send_message("Comando /caucho: Limite de API calls excedido. Sori el CTO no nos dio budget.")
 
 # COMANDO DOLAR
 @bot.tree.command(name="preciodolar", description="Cotizacion del dolar")
