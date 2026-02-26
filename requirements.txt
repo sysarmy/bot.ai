@@ -91,7 +91,7 @@ urllib3==2.6.3
 watchdog==6.0.0
 Webhook-Listener==1.2.0
 websockets==13.1
-Werkzeug==3.1.5
+Werkzeug==3.1.6
 yarl>=1.17.0
 zc.lockfile==3.0.post1
 zipp==3.21.0
