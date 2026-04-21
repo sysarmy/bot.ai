@@ -67,7 +67,7 @@ pyasn1_modules==0.4.1
 pyngrok==7.2.3
 pyparsing==3.2.1
 python-dateutil==2.9.0.post0
-python-dotenv==1.0.1
+python-dotenv==1.2.2
 pytz==2025.1
 PyYAML==6.0.2
 RapidFuzz==3.13.0
