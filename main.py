@@ -31,6 +31,7 @@ from src.quote import quotefunc, qsearchfunc
 from src.nerdearla import nerdearlacharlasfunc
 from src.shithappens import ShitHappens
 from src.f1 import f1func
+from src.infleta import infletafun
 
 #IMPORT DE FUNCIONES PARA SISTEMA DE JOBS
 from src.jobsearch import jobsearchfunc
@@ -772,6 +773,7 @@ async def jobs(ctx, texto):
 async def f1(ctx, texto):
     await formula1ctxfunc(ctx, texto)
 
+
 #########################################################################################
 ################### LLAMADAS DE COMANDOS SLASH NATIVOS DISCORD (TREE) ###################
 
@@ -978,6 +980,25 @@ async def formula1(interaction: discord.Interaction, opcion: app_commands.Choice
             await interaction.followup.send(response, ephemeral=True)
     else:
         await interaction.followup.send("Hubo un error o el mensaje estaba vacío.", ephemeral=True)
+
+
+# COMANDO INFLETA (SLASH)
+@bot.tree.command(name="infleta", description="Crea encuesta de infleta (10 opciones / 8h)")
+@app_commands.describe(rango="Rango inicio-fin. Ej: 2 3 o 2,3")
+async def infleta_slash(interaction: discord.Interaction, rango: str):
+    try:
+        poll = await infletafun(interaction, rango)
+        await interaction.response.send_message(poll=poll)
+    except RuntimeError:
+        await interaction.response.send_message(
+            "Tu version de discord.py no soporta encuestas nativas. Actualiza a 2.4+ para usar /infleta.",
+            ephemeral=True,
+        )
+    except ValueError:
+        await interaction.response.send_message(
+            "Rango invalido. Usa: /infleta rango:'2 3'  o  /infleta rango:'2,3'",
+            ephemeral=True,
+        )
 
 # COMANDO JOB POST (NATIVO DISCORD)
 @bot.tree.command(name="jobpost", description="Postear un job (solo rol recruiter)")
