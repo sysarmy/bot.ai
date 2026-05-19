@@ -7,10 +7,9 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-# TEMPORAL: usando Copa Libertadores para pruebas (league 13, season 2025)
-# TODO: cambiar a league=1, season=2026 para el Mundial
-MUNDIAL_LEAGUE_ID = 13
-MUNDIAL_SEASON = 2025
+# ID de liga y temporada para la Copa del Mundo FIFA 2026 en api-football
+MUNDIAL_LEAGUE_ID = 1
+MUNDIAL_SEASON = 2026
 
 async def mundialfun(interaction):
     try:
@@ -45,7 +44,7 @@ async def mundialfun(interaction):
         partidos = data.get("response", [])
 
         embed = Embed(
-            title="🏆 Copa Libertadores 2025 [TEST]",
+            title="🏆 Copa del Mundo FIFA 2026",
             description=f"Partidos del {hoy}",
             color=discord.Color.gold()
         )
@@ -102,7 +101,7 @@ async def mundialfun(interaction):
     except Exception as e:
         print(f"Error en mundialfun: {e}")
         embed = Embed(
-            title="🏆 Copa Libertadores 2025 [TEST]",
+            title="🏆 Copa del Mundo FIFA 2026",
             description="Error al consultar los partidos. Intenta mas tarde.",
             color=discord.Color.red()
         )
