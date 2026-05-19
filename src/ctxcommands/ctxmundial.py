@@ -4,9 +4,10 @@ import os
 import requests
 
 
-# ID de liga y temporada para la Copa del Mundo FIFA 2026 en api-football
-MUNDIAL_LEAGUE_ID = 1
-MUNDIAL_SEASON = 2026
+# TEMPORAL: usando Copa Libertadores para pruebas (league 13, season 2025)
+# TODO: cambiar a league=1, season=2026 para el Mundial
+MUNDIAL_LEAGUE_ID = 13
+MUNDIAL_SEASON = 2025
 
 
 async def mundialfunctx(ctx):
@@ -34,10 +35,10 @@ async def mundialfunctx(ctx):
         print(f"{datetime.datetime.now()} - Se ejecuto el comando !mundial")
 
         if not partidos:
-            await ctx.send(f"🏆 Mundial 2026 - {hoy}: no hay partidos programados para hoy.")
+            await ctx.send(f"🏆 Copa Libertadores 2025 [TEST] - {hoy}: no hay partidos programados para hoy.")
             return
 
-        mensaje = f"🏆 Mundial 2026 - Partidos del {hoy}\n"
+        mensaje = f"🏆 Copa Libertadores 2025 [TEST] - Partidos del {hoy}\n"
         estados_en_juego = {"1H", "HT", "2H", "ET", "BT", "P", "INT", "LIVE"}
         estados_finalizado = {"FT", "AET", "PEN", "AWD", "WO"}
 
