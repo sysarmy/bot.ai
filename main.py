@@ -55,6 +55,7 @@ from src.ctxcommands.ctxferiadoes import feriadoesfunctx
 from src.ctxcommands.ctxbirras import birrasfunctx
 from src.ctxcommands.ctxfulbo import fulbofunctx
 from src.ctxcommands.ctxhelp import helpfunctx
+from src.ctxcommands.ctxholamundo import holamundofunctx
 from src.ctxcommands.ctxkarma import karmarankfunctx, karmawordfunctx, karmagiversfunctx, karmagiversuserfunctx
 from src.ctxcommands.ctxquote import quotefunctx, qsearchfunctx, quoteaddfunctx
 from src.ctxcommands.ctxsubte import subtefunctx
@@ -305,7 +306,7 @@ async def on_reaction_remove(reaction, user):
 
 # Funcion de manejo de error cuando el argumento es None
 # (usuario manda el comando sin parametros requeridos, como por ejemplo en !clima o !fulbo)
-# Excepto para !help que tiene su propio mensaje si el comando va vacio
+# Excepto para !help y !holamundo que tiene su propio mensaje si el comando va vacio
 
 @bot.event
 async def on_command_error(ctx, error):
@@ -323,6 +324,12 @@ async def on_command_error(ctx, error):
             # Log
             print(FechaActual)
             print ("Se ha ejecutado el comando !help")
+        
+        elif ctx.command.name == "holamundo":
+            await holamundofunctx(ctx)
+            # Log
+            print(FechaActual)
+            print ("Se ha ejecutado el comando !holamundo")
 
         elif ctx.command.name == "caucho":
             await cauchofunctx(ctx)
@@ -632,6 +639,11 @@ async def on_message(message):
 @bot.command()
 async def help(ctx, texto):
     await helpfunctx(ctx, texto)
+
+# COMANDO HOLAMUNDO
+@bot.command()
+async def holamundo(ctx, texto):
+    await holamundofunctx(ctx, texto)
 
 # COMANDO CLIMA   
 @bot.command()
