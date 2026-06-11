@@ -1,77 +1,97 @@
 import datetime
 import os
+import json
+import http.client
 
-import requests
 from dotenv import load_dotenv
 
 
-MUNDIAL_LEAGUE_ID = 1
-MUNDIAL_SEASON = 2026
+load_dotenv()
+MUNDIAL_COMPETITION_CODE = "WC"
 
 
 async def mundialfunctx(ctx):
     """Comando !mundial (ctx): responde en texto plano para IRC/bridge."""
     try:
-        apisports_key = os.getenv("APISPORTS_KEY")
-        if not apisports_key:
-            await ctx.send("Error: No se encontro APISPORTS_KEY en el .env")
+        fulbo_token = os.getenv("FULBO_token")
+        if not fulbo_token:
+            await ctx.send("Error: No se encontro FULBO_token en el .env")
             return
 
-        hoy = datetime.date.today().strftime("%Y-%m-%d")
+        hoy = datetime.date.today()
+        hoy_string = hoy.strftime("%Y-%m-%d")
 
-        url = "https://v3.football.api-sports.io/fixtures"
-        headers = {"x-apisports-key": apisports_key}
-        params = {
-            "league": MUNDIAL_LEAGUE_ID,
-            "season": MUNDIAL_SEASON,
-            'date': hoy,
-            "timezone": "America/Argentina/Buenos_Aires",
-        }
+        connection = http.client.HTTPSConnection("api.football-data.org")
+        headers = {"X-Auth-Token": f"{fulbo_token}"}
+        connection.request(
+            "GET",
+            f"/v4/competitions/{MUNDIAL_COMPETITION_CODE}/matches?dateFrom={hoy_string}&dateTo={hoy_string}",
+            None,
+            headers,
+        )
+        api_response = connection.getresponse()
+        raw_body = api_response.read().decode("utf-8", errors="replace")
 
-        response = requests.get(url, headers=headers, params=params)
-        data = response.json()
-        partidos = data.get("response", [])
+        if api_response.status != 200:
+            await ctx.send(f"Error API football-data ({api_response.status}). Intenta mas tarde.")
+            return
+
+        if not raw_body.strip():
+            await ctx.send("La API devolvio una respuesta vacia. Intenta mas tarde.")
+            return
+
+        try:
+            data = json.loads(raw_body)
+        except json.JSONDecodeError:
+            await ctx.send("La API devolvio una respuesta invalida. Intenta mas tarde.")
+            return
+        partidos = data.get("matches", [])
+        competition_name = data.get("competition", {}).get("name", "Copa del Mundo FIFA")
 
         print(f"{datetime.datetime.now()} - Se ejecuto el comando !mundial")
 
         if not partidos:
-            await ctx.send(f"🏆 Copa del Mundo FIFA 2026 - {hoy}: no hay partidos programados para hoy.")
+            await ctx.send(f"🏆 {competition_name} - {hoy_string}: no hay partidos programados para hoy.")
             return
 
-        mensaje = f"🏆 Copa del Mundo FIFA 2026 - Partidos del {hoy}\n"
-        estados_en_juego = {"1H", "HT", "2H", "ET", "BT", "P", "INT", "LIVE"}
-        estados_finalizado = {"FT", "AET", "PEN", "AWD", "WO"}
+        mensaje = f"🏆 {competition_name} - Partidos del {hoy_string}\n"
+        estados_en_juego = {"IN_PLAY", "PAUSED", "EXTRA_TIME", "PENALTY_SHOOTOUT"}
+        estados_finalizado = {"FINISHED", "AWARDED"}
+        estado_suspendido = {"POSTPONED", "SUSPENDED", "CANCELLED"}
 
         for partido in partidos:
-            equipo_local = partido["teams"]["home"]["name"]
-            equipo_visitante = partido["teams"]["away"]["name"]
-            estado = partido["fixture"]["status"]["short"]
-            fecha_iso = partido["fixture"]["date"]
-            ronda = partido["league"].get("round", "")
+            equipo_local = partido["homeTeam"]["name"]
+            equipo_visitante = partido["awayTeam"]["name"]
+            estado = partido.get("status", "")
+            fecha_iso = partido.get("utcDate", "")
+            ronda = partido.get("stage", "")
+            matchday = partido.get("matchday")
 
             try:
-                dt = datetime.datetime.fromisoformat(fecha_iso)
-                hora = dt.strftime("%H:%M")
+                dt = datetime.datetime.fromisoformat(fecha_iso.replace("Z", "+00:00"))
+                hora = dt.strftime("%H:%M UTC")
             except Exception:
                 hora = "??:??"
 
-            goles_local = partido["goals"]["home"]
-            goles_visitante = partido["goals"]["away"]
+            goles_local = partido.get("score", {}).get("fullTime", {}).get("home")
+            goles_visitante = partido.get("score", {}).get("fullTime", {}).get("away")
+            goles_local_txt = "-" if goles_local is None else goles_local
+            goles_visitante_txt = "-" if goles_visitante is None else goles_visitante
 
             if estado in estados_finalizado:
-                resultado = f"{goles_local}-{goles_visitante} Final"
+                resultado = f"{goles_local_txt}-{goles_visitante_txt} Final"
             elif estado in estados_en_juego:
-                elapsed = partido["fixture"]["status"].get("elapsed", "")
-                resultado = f"{goles_local}-{goles_visitante} {elapsed}'"
-            elif estado == "NS":
+                resultado = f"{goles_local_txt}-{goles_visitante_txt} En juego"
+            elif estado == "SCHEDULED":
                 resultado = f"{hora} hs"
-            elif estado in {"PST", "CANC", "SUSP", "ABD"}:
+            elif estado in estado_suspendido:
                 resultado = f"Suspendido/Postergado ({estado})"
             else:
                 resultado = hora
 
             ronda_txt = f" [{ronda}]" if ronda else ""
-            mensaje += f"{equipo_local} vs {equipo_visitante}: {resultado}{ronda_txt}\n"
+            fecha_txt = f" [Fecha {matchday}]" if matchday is not None else ""
+            mensaje += f"{equipo_local} vs {equipo_visitante}: {resultado}{ronda_txt}{fecha_txt}\n"
 
         await ctx.send(mensaje.strip())
 
