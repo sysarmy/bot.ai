@@ -24,6 +24,7 @@ from src.feriadoCL import feriadoCLfun
 from src.feriadoES import feriadoESfun
 from src.feriadoMX import feriadoMXfun
 from src.feriadoUY import feriadoUYfun
+from src.feriadoBO import feriadoBOfun
 from src.birras import birrasfunc
 from src.karma import karmagiversfunc, karmarankfunc, karmauserfunc
 from src.help import helpfunc
@@ -53,6 +54,7 @@ from src.ctxcommands.ctxferiadocl import feriadoclfunctx
 from src.ctxcommands.ctxferiadomx import feriadomxfunctx
 from src.ctxcommands.ctxferiadouy import feriadouyfunctx
 from src.ctxcommands.ctxferiadoes import feriadoesfunctx
+from src.ctxcommands.ctxferiadobo import feriadobofunctx
 from src.ctxcommands.ctxbirras import birrasfunctx
 from src.ctxcommands.ctxfulbo import fulbofunctx
 from src.ctxcommands.ctxhelp import helpfunctx
@@ -314,7 +316,7 @@ async def on_command_error(ctx, error):
     FechaActual = datetime.now()
 
     mensajeayuda_general = """Informacion general sobre los comandos del bot de Sysarmy       
-                        !caucho !dolar !cripto !euro !pesos !fulbo !clima !subte !underground !feriadoar !feriadocl !feriadoes !feriadomx !feriadouy !q !qsearch !qadd !rank !kgivers !kgiven !karma !nerdearla !jobs !f1
+                        !caucho !dolar !cripto !euro !pesos !fulbo !clima !subte !underground !feriadoar !feriadocl !feriadoes !feriadomx !feriadouy !feriadobo !q !qsearch !qadd !rank !kgivers !kgiven !karma !nerdearla !jobs !f1
                         Mas detalles en el canal #help-bot-commands de Discord, dentro de la seccion de Welcome! - o ejecutando /help desde Discord"""
 
 # Custom error handling - si !help se manda vacio sin especificar comando, manda un mensaje de ayuda general
@@ -689,7 +691,11 @@ async def feriadouy(ctx):
 
 @bot.command()
 async def feriadomx(ctx):
-    await feriadomxfunctx(ctx)   
+    await feriadomxfunctx(ctx)
+
+@bot.command()
+async def feriadobo(ctx):
+    await feriadobofunctx(ctx)
 
 # COMANDO SUBTE
 @bot.command()
@@ -921,6 +927,15 @@ async def feriadoses(interaction: Interaction):
 async def feriadosmx(interaction: Interaction):
     try:
         await interaction.response.send_message(embed= await feriadoMXfun(interaction))
+    except:
+        print(f"Limite de API calls excedido. Ultimo call hecho por {interaction.user}")
+        await interaction.response.send_message("Comando /feriadoar: Limite de API calls excedido. Sori el CTO no nos dio budget.")
+
+# COMANDO FERIADO BOLIVIA
+@bot.tree.command(name="feriadobo", description="Proximos feriados en Bolivia")
+async def feriadosbo(interaction: Interaction):
+    try:
+        await interaction.response.send_message(embed= await feriadoBOfun(interaction))
     except:
         print(f"Limite de API calls excedido. Ultimo call hecho por {interaction.user}")
         await interaction.response.send_message("Comando /feriadoar: Limite de API calls excedido. Sori el CTO no nos dio budget.")
