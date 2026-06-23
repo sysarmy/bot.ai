@@ -44,7 +44,7 @@ El comando help detalla instrucciones de uso para cada uno.
 
 Comandos incluidos:
 
- - De feriados    --> !feriadomx !feriadoar !feriadouy !feriadocl !feriadoes
+ - De feriados    --> !feriadomx !feriadoar !feriadouy !feriadocl !feriadoes !feriadobo
  - Lifestyle      --> !underground !subte !clima !fulbo !flip !shrug !f1
  - Economia       --> !caucho !cripto !dolar !euro !pesos
  - Karma          --> !rank !karma !kgiven !kgivers

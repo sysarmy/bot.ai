@@ -10,7 +10,7 @@ async def helpfunctx(ctx, texto):
     if texto is None:
         
         mensajeayuda_general = """Informacion general sobre los comandos del bot de Sysarmy       
-              !dolar !cripto !euro !fulbo !pesos !clima !subte !underground !feriadoar !feriadocl !feriadoes !feriadomx !feriadouy !q !qsearch !qadd !rank !kgivers !kgiven !karma !birras !flip !shrug !nerdearla !jobs !f1 !mundial
+              !dolar !cripto !euro !fulbo !pesos !clima !subte !underground !feriadoar !feriadocl !feriadoes !feriadomx !feriadouy !feriadobo !q !qsearch !qadd !rank !kgivers !kgiven !karma !birras !flip !shrug !nerdearla !jobs !f1 !mundial
                           Mas detalles en el canal #help-bot-commands de Discord, dentro de la seccion de Welcome! - o ejecutando /help desde Discord"""
         await ctx.send(mensajeayuda_general)
    
@@ -41,8 +41,8 @@ async def helpfunctx(ctx, texto):
     elif texto == "dolar":
         await ctx.send("Pone !dolar y te da los precios de la timba. Opcionalmente se puede especifica el valor en pesos, Ej: '!dolar 500'")
 
-    elif texto in ["feriado", "feriadoar", "feriadomx", "feriadoes", "feriadocl", "feriadouy"]:
-      await ctx.send("Pone !feriadouy !feriadoar !feriadocl !feriadoes !feriadomx y te da los proximos feriados para el pais seleccionado. No requiere argumentos")   
+    elif texto in ["feriado", "feriadoar", "feriadomx", "feriadoes", "feriadocl", "feriadouy", "feriadobo"]:
+      await ctx.send("Pone !feriadouy !feriadoar !feriadocl !feriadoes !feriadomx !feriadobo y te da los proximos feriados para el pais seleccionado. No requiere argumentos")   
 
     elif texto == "euro":
       await ctx.send("Pone !euro y te da los precios de la timba. No requiere argumentos")
