@@ -1,3 +1,10 @@
+## Repositorio archivado
+
+Este repositorio fue reemplazado por https://github.com/sysarmy/bot.irc
+
+Lamentablemente Discord no aprobó nuestro bot y el uso de los scopes de la API, así que lo migramos a bot.irc que está deployado directamente en IRC y bridgeado con Discord y Slack. La mayoría de los comandos se migraron.
+
+---
 
 BOFH - Discord community bot for Sysarmy
 
